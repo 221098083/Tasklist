@@ -1,6 +1,7 @@
 package com.se.tasklist;
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -11,7 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 
 import com.se.tasklist.databinding.ActivityMainBinding;
 import com.se.tasklist.task.Label;
-import com.se.tasklist.task.TaskList;
+import com.se.tasklist.task.Task;
 import com.se.tasklist.task.TaskManager;
 import com.se.tasklist.task.UserTaskList;
 
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     List<UserTaskList> defaultTaskLists;
     List<UserTaskList> userTaskLists;
     List<Label> labels;
+
+    List<Task> currentTaskListContent;
 
     private long tasklist_selected=0;
 
@@ -63,21 +66,38 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         listViewFragment=ListViewFragment.newInstance();
         fragmentTransaction.add(R.id.fcv_listview,listViewFragment);
         fragmentTransaction.commit();
+        hideFragment(navigatorFragment);
+        hideFragment(listViewFragment);
         showFragment(navigatorFragment);
         showFragment(listViewFragment);
     }
 
     private void showFragment(Fragment fragment){
         if(fragment!=null){
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.show(fragment);
             fragmentTransaction.commit();
         }
     }
 
+    private void hideFragment(Fragment fragment){
+        if(fragment!=null){
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.hide(fragment);
+            fragmentTransaction.commit();
+        }
+    }
+
+    public Activity getActivity(){
+        return this;
+    }
+
     @Override
     public void onTaskListSwitched(long target_list){
-        this.tasklist_selected=target_list;
+        tasklist_selected=target_list;
+        this.currentTaskListContent.clear();
+        this.currentTaskListContent.addAll(taskManager.getTasksFromList(tasklist_selected));
+        listViewFragment.refresh();
     }
 
     @Override
@@ -108,6 +128,27 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     public void createTaskList(String name) {
         UserTaskList taskList=taskManager.createTaskList(name);
         this.userTaskLists.add(taskList);
+    }
+
+    @Override
+    public List<Task> getCurrentTaskListContent(){
+        if(this.currentTaskListContent==null){
+            this.currentTaskListContent=taskManager.getTasksFromList(tasklist_selected);
+        }
+        return this.currentTaskListContent;
+    }
+
+    @Override
+    public void createTask(String name){
+        Task task=taskManager.createTask(name,tasklist_selected);
+        currentTaskListContent.add(task);
+    }
+
+    @Override
+    public String getCurrentTaskListName(){
+        if(tasklist_selected==0)
+            return "Home";
+        return taskManager.getTaskListById(tasklist_selected).getInfo().getName();
     }
 
 }

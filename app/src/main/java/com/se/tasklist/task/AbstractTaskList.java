@@ -15,4 +15,5 @@ public abstract class AbstractTaskList implements TaskList{
 
     public void sortTasks() { this.tasks.sort(Task::compareTo); }
 
+
 }

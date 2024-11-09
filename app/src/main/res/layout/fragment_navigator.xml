@@ -10,23 +10,27 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/transparent"
         android:orientation="vertical">
         <ListView
             android:id="@+id/default_listgroup"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="5"
+            android:background="@color/transparent"
             />
         <ListView
             android:id="@+id/user_listgroup"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="5"
+            android:background="@color/transparent"
             />
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/transparent">
             <ImageButton
                 android:id="@+id/create_list_button"
                 android:layout_width="0dp"
@@ -40,6 +44,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
+                android:layout_marginRight="10dp"
+                android:paddingStart="10dp"
                 android:hint="Add new list"
                 android:background="@drawable/shape_rectangle"
                 />
@@ -50,6 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="5"
+            android:background="@color/transparent"
             />
 
     </LinearLayout>

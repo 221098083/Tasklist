@@ -53,6 +53,7 @@ public class TaskListAdapter extends BaseAdapter {
         }
         UserTaskList taskList=taskLists.get(position);
         holder.listName.setText(taskList.getInfo().getName());
+        holder.listName.setWillNotDraw(false);
         return convertView;
     }
 

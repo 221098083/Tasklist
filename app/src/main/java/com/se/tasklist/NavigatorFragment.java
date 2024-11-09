@@ -1,13 +1,17 @@
 package com.se.tasklist;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -67,44 +71,54 @@ public class NavigatorFragment extends Fragment {
         defaultListGroup=view.findViewById(R.id.default_listgroup);
         defaultListAdapter=new TaskListAdapter(this.getActivity(),listener.getDefaultTaskLists());
         defaultListGroup.setAdapter(defaultListAdapter);
-        defaultListGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        defaultListGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                long id=adapterView.getSelectedItemId();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                long id=defaultListAdapter.getItemId(i);
                 listener.onTaskListSwitched(id);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
         userListGroup=view.findViewById(R.id.user_listgroup);
         userListAdapter=new TaskListAdapter(this.getActivity(),listener.getUserTaskLists());
         userListGroup.setAdapter(userListAdapter);
+        userListGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                long id=userListAdapter.getItemId(i);
+                Log.d(TAG,"item selected:"+id);
+                listener.onTaskListSwitched(id);
+            }
+
+        });
 
         labelListGroup=view.findViewById(R.id.label_listgroup);
         labelAdapter=new LabelAdapter(this.getActivity(),listener.getLabels());
         labelListGroup.setAdapter(labelAdapter);
+        labelListGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                long id=labelAdapter.getItemId(i);
+                listener.onTaskListSwitched(id);
+            }
+
+        });
 
         createListButton=view.findViewById(R.id.create_list_button);
         createListText=view.findViewById(R.id.create_list_text);
 
-        createListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name=createListText.getText().toString();
-                if(name==null||name.length()==0){
-                    return;
-                }
-                listener.createTaskList(name);
-                userListAdapter.notifyDataSetChanged();
-                createListText.setText("");
-                createListText.clearFocus();
+        createListButton.setOnClickListener(view1 -> {
+            String name=createListText.getText().toString();
+            if(name==null||name.length()==0){
+                return;
             }
+            listener.createTaskList(name);
+            userListAdapter.notifyDataSetChanged();
+            createListText.setText("");
+            createListText.clearFocus();
+            InputMethodManager imm = (InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(createListText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         });
-
 
 
         return view;

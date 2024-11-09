@@ -12,6 +12,12 @@ public class TaskInfo {
     private Long taskList;
     private Long label;
 
+    public TaskInfo(String name,long taskList){
+        this.name=name;
+        this.taskList=taskList;
+        this.label=-1L;
+    }
+
     public Long getId() {
         return id;
     }

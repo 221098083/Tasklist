@@ -17,8 +17,19 @@ import java.util.Map;
 
 public class TaskManager {
 
+    /*Tasks are numbered 0-65535. */
     public static final int MAX_TASK_COUNT=65536;
-    public static final int MAX_TASKLIST_COUNT=1000;
+    /*Task Lists are numbered 0-999.
+    * 0 reserved for Home (present all tasks).
+    * 1 is reserved for Important.
+    * 2 is reserved for shared Task List(not implemented yet).
+    * 3-499 for User Customized Task Lists.
+    * 500-999 for User Labels.*/
+    //public static final int MAX_TASKLIST_COUNT=1000;
+    public static final int USER_TASKLIST_LOW=3;
+    public static final int USER_TASKLIST_HIGH=500;
+    public static final int LABEL_LOW=500;
+    public static final int LABEL_HIGH=1000;
 
 
     private static TaskManager manager;
@@ -26,6 +37,7 @@ public class TaskManager {
 
     private TaskManager(){}
 
+    /*Initialize and get the TaskManager instance.*/
     public static TaskManager initTaskManager(){
         if(manager==null){
             manager=new TaskManager();
@@ -35,6 +47,9 @@ public class TaskManager {
         return manager;
     }
 
+    /* TaskDataManager:
+    * this inner class is intended for embedded data operation in its outer class TaskManager.
+    * and the outer class TaskManager doesn't directly interact with the database but through the TaskDataManager object.*/
     class TaskDataManager{
 
         private Map<Long,Task> tasks;
@@ -118,21 +133,28 @@ public class TaskManager {
             return ret;
         }
 
-        public List<Task> getTasksFromList(int taskList_id){
+        public List<Task> getTasksFromList(long taskList_id){
+            if(taskList_id==0){
+                return new LinkedList<>();
+            }
             return this.taskLists.get(taskList_id).getTasks();
         }
 
-        public List<Task> getTasksFromLabel(int label_id){
+        public List<Task> getTasksFromLabel(long label_id){
             return this.labels.get(label_id).getTasks();
         }
 
         public UserTaskList createTaskList(String name){
             TaskListInfo info=new TaskListInfo(name);
             long id;
-            for(id=0;id<MAX_TASKLIST_COUNT;++id){
+            for(id=USER_TASKLIST_LOW;id<USER_TASKLIST_HIGH;++id){
                 if(taskLists.get(id)==null){
                     break;
                 }
+            }
+            if(id==USER_TASKLIST_HIGH){
+                //TODO: THROW EXCEPTION
+                return null;
             }
             info.setId(id);
             this.taskListDao.insert(info);
@@ -141,6 +163,31 @@ public class TaskManager {
             return taskList;
         }
 
+        public Task createTask(String name,long taskList_id){
+            TaskInfo info=new TaskInfo(name,taskList_id);
+            Log.d(TAG,"adding task to"+taskList_id);
+            long id;
+            for(id=0;id<MAX_TASK_COUNT;++id){
+                if(tasks.get(id)==null){
+                    break;
+                }
+            }
+            if(id==MAX_TASK_COUNT){
+                //TODO:THROW EXCEPTION
+                return null;
+            }
+            info.setId(id);
+            this.taskDao.insert(info);
+            Task task=new Task(info);
+            this.tasks.put(id,task);
+            UserTaskList taskList=taskLists.get(taskList_id);
+            taskList.addTask(task);
+            return task;
+        }
+
+        public UserTaskList getTaskListById(long taskList_id){
+            return taskLists.get(taskList_id);
+        }
 
     }
 
@@ -157,8 +204,20 @@ public class TaskManager {
         return this.taskDataManager.getUserLabels();
     }
 
+    public List<Task> getTasksFromList(long taskList_id){
+        return taskDataManager.getTasksFromList(taskList_id);
+    }
+
     public UserTaskList createTaskList(String name){
         return this.taskDataManager.createTaskList(name);
+    }
+
+    public Task createTask(String name,long taskList_id){
+        return this.taskDataManager.createTask(name,taskList_id);
+    }
+
+    public UserTaskList getTaskListById(long taskList_id){
+        return taskDataManager.getTaskListById(taskList_id);
     }
 
 }

@@ -6,4 +6,5 @@
     <color name="navigator">#FFFCFAF5</color>
     <color name="background">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
+    <color name="divider">#FFFFCF7F</color>
 </resources>
