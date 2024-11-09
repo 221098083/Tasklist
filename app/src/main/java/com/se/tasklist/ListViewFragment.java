@@ -1,6 +1,8 @@
 package com.se.tasklist;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,6 +31,7 @@ public class ListViewFragment extends Fragment {
     ImageButton createTaskButton;
     EditText createTaskText;
 
+    ImageView listTitleLabel;
     TextView taskListName;
 
     ListView taskListContent;
@@ -68,6 +72,7 @@ public class ListViewFragment extends Fragment {
         taskAdapter=new TaskAdapter(this.getActivity(),listener.getCurrentTaskListContent());
         taskListContent.setAdapter(taskAdapter);
 
+        listTitleLabel=view.findViewById(R.id.list_title_label);
         taskListName=view.findViewById(R.id.task_list_name);
         taskListName.setWillNotDraw(false);
 
@@ -80,7 +85,6 @@ public class ListViewFragment extends Fragment {
                 return;
             }
             listener.createTask(name);
-            taskAdapter.notifyDataSetChanged();
             createTaskText.setText("");
             createTaskText.clearFocus();
             InputMethodManager imm = (InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -94,6 +98,9 @@ public class ListViewFragment extends Fragment {
     }
 
     public void refresh(){
+        @SuppressLint("UseCompatLoadingForDrawables") GradientDrawable icon=(GradientDrawable) this.getActivity().getDrawable(R.drawable.list_title_label);
+        icon.setColor(listener.getLabelColor());
+        listTitleLabel.setImageDrawable(icon);
         taskListName.setText(listener.getCurrentTaskListName());
         taskAdapter.notifyDataSetChanged();
     }

@@ -9,6 +9,7 @@ public class UserTaskList extends AbstractTaskList implements Comparable<UserTas
         this.info=info;
     }
 
+    @Override
     public TaskListInfo getInfo() {
         return info;
     }

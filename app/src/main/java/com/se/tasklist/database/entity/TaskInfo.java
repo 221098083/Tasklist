@@ -4,28 +4,33 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class TaskInfo {
+public class TaskInfo implements EntityInfo{
     @PrimaryKey(autoGenerate = false)
-    private Long id;
+    private long id;
 
     private String name;
-    private Long taskList;
-    private Long label;
+    private long taskList;
+    private long label;
+
+    private String ddl;
 
     public TaskInfo(String name,long taskList){
         this.name=name;
         this.taskList=taskList;
         this.label=-1L;
+        this.ddl=null;
     }
 
-    public Long getId() {
+    @Override
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -34,19 +39,27 @@ public class TaskInfo {
         this.name = name;
     }
 
-    public Long getTaskList() {
+    public long getTaskList() {
         return taskList;
     }
 
-    public void setTaskList(Long taskList) {
+    public void setTaskList(long taskList) {
         this.taskList = taskList;
     }
 
-    public Long getLabel() {
+    public long getLabel() {
         return label;
     }
 
-    public void setLabel(Long label) {
+    public void setLabel(long label) {
         this.label = label;
+    }
+
+    public String getDdl() {
+        return ddl;
+    }
+
+    public void setDdl(String ddl) {
+        this.ddl = ddl;
     }
 }

@@ -9,6 +9,7 @@ public class Label extends AbstractTaskList implements Comparable<Label>{
         this.info=info;
     }
 
+    @Override
     public LabelInfo getInfo() {
         return info;
     }

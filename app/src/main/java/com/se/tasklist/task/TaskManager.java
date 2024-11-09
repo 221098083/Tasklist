@@ -9,6 +9,7 @@ import com.se.tasklist.database.dao.*;
 import com.se.tasklist.database.entity.LabelInfo;
 import com.se.tasklist.database.entity.TaskInfo;
 import com.se.tasklist.database.entity.TaskListInfo;
+import com.se.tasklist.utils.RandomColorGenerator;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,10 +27,10 @@ public class TaskManager {
     * 3-499 for User Customized Task Lists.
     * 500-999 for User Labels.*/
     //public static final int MAX_TASKLIST_COUNT=1000;
-    public static final int USER_TASKLIST_LOW=3;
-    public static final int USER_TASKLIST_HIGH=500;
-    public static final int LABEL_LOW=500;
-    public static final int LABEL_HIGH=1000;
+    public static final long USER_TASKLIST_LOW=3L;
+    public static final long USER_TASKLIST_HIGH=500L;
+    public static final long LABEL_LOW=500L;
+    public static final long LABEL_HIGH=1000L;
 
 
     private static TaskManager manager;
@@ -96,6 +97,12 @@ public class TaskManager {
                 UserTaskList taskList=new UserTaskList(info);
                 taskLists.put(info.getId(),taskList);
             }
+            if(this.taskLists.size()==0){
+                /*First start of the application. Initialize information of the reserved lists.*/
+                createTaskList("Home");
+                createTaskList("Important");
+                createTaskList("Group");
+            }
         }
 
         private void loadLabels(){
@@ -108,8 +115,11 @@ public class TaskManager {
 
         private void InitializeTaskListsAndLabels(){
             for(Task task:tasks.values()){
+                if(task.getInfo().getTaskList()!=0L) {
+                    this.taskLists.get(0L).addTask(task);
+                }
                 this.taskLists.get(task.getInfo().getTaskList()).addTask(task);
-                if(task.getInfo().getLabel()!=-1){
+                if(task.getInfo().getLabel()!=-1L){
                     this.labels.get(task.getInfo().getLabel()).addTask(task);
                 }
             }
@@ -121,8 +131,20 @@ public class TaskManager {
             }
         }
 
+        public List<UserTaskList> getDefaultTaskLists(){
+            List<UserTaskList> ret=new LinkedList<>();
+            ret.add(taskLists.get(0L));
+            ret.add(taskLists.get(1L));
+            ret.add(taskLists.get(2L));
+            return ret;
+        }
+
+
         public List<UserTaskList> getUserTaskLists(){
             List<UserTaskList> ret=new LinkedList<>(this.taskLists.values());
+            ret.remove(taskLists.get(0L));
+            ret.remove(taskLists.get(1L));
+            ret.remove(taskLists.get(2L));
             ret.sort((t1,t2)->t1.compareTo(t2));
             return ret;
         }
@@ -134,10 +156,13 @@ public class TaskManager {
         }
 
         public List<Task> getTasksFromList(long taskList_id){
-            if(taskList_id==0){
-                return new LinkedList<>();
+            Log.d(TAG,"getting tasklist from List "+taskList_id);
+            if(taskList_id<USER_TASKLIST_HIGH){
+                return this.taskLists.get(taskList_id).getTasks();
             }
-            return this.taskLists.get(taskList_id).getTasks();
+            else{
+                return this.labels.get(taskList_id).getTasks();
+            }
         }
 
         public List<Task> getTasksFromLabel(long label_id){
@@ -147,7 +172,7 @@ public class TaskManager {
         public UserTaskList createTaskList(String name){
             TaskListInfo info=new TaskListInfo(name);
             long id;
-            for(id=USER_TASKLIST_LOW;id<USER_TASKLIST_HIGH;++id){
+            for(id=0L;id<USER_TASKLIST_HIGH;++id){
                 if(taskLists.get(id)==null){
                     break;
                 }
@@ -161,6 +186,26 @@ public class TaskManager {
             UserTaskList taskList=new UserTaskList(info);
             this.taskLists.put(id,taskList);
             return taskList;
+        }
+
+        public Label createLabel(String name){
+            int color=new RandomColorGenerator().generateRandomColor();
+            LabelInfo info=new LabelInfo(name,color);
+            long id;
+            for(id=LABEL_LOW;id<LABEL_HIGH;++id){
+                if(labels.get(id)==null){
+                    break;
+                }
+            }
+            if(id==LABEL_HIGH){
+                //TODO: THROW EXCEPTION
+                return null;
+            }
+            info.setId(id);
+            this.labelDao.insert(info);
+            Label label=new Label(info);
+            this.labels.put(id,label);
+            return label;
         }
 
         public Task createTask(String name,long taskList_id){
@@ -180,20 +225,28 @@ public class TaskManager {
             this.taskDao.insert(info);
             Task task=new Task(info);
             this.tasks.put(id,task);
+            if(taskList_id!=0L) {
+                UserTaskList home = taskLists.get(0L);
+                home.addTask(task);
+            }
             UserTaskList taskList=taskLists.get(taskList_id);
             taskList.addTask(task);
             return task;
         }
 
-        public UserTaskList getTaskListById(long taskList_id){
-            return taskLists.get(taskList_id);
+        public TaskList getTaskListById(long taskList_id){
+            if(taskList_id<USER_TASKLIST_HIGH){
+                return this.taskLists.get(taskList_id);
+            }
+            else{
+                return this.labels.get(taskList_id);
+            }
         }
 
     }
 
     public List<UserTaskList> getDefaultTaskLists(){
-        //TODO
-        return new LinkedList<>();
+        return this.taskDataManager.getDefaultTaskLists();
     }
 
     public List<UserTaskList> getUserTaskLists(){
@@ -212,11 +265,15 @@ public class TaskManager {
         return this.taskDataManager.createTaskList(name);
     }
 
+    public Label createLabel(String name){
+        return this.taskDataManager.createLabel(name);
+    }
+
     public Task createTask(String name,long taskList_id){
         return this.taskDataManager.createTask(name,taskList_id);
     }
 
-    public UserTaskList getTaskListById(long taskList_id){
+    public TaskList getTaskListById(long taskList_id){
         return taskDataManager.getTaskListById(taskList_id);
     }
 

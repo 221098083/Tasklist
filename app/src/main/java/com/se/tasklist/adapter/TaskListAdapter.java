@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.se.tasklist.NavigatorFragment;
@@ -45,6 +46,7 @@ public class TaskListAdapter extends BaseAdapter {
         if(convertView==null){
             convertView=LayoutInflater.from(context).inflate(R.layout.tasklist_item, null);
             holder=new ViewHolder();
+            holder.listIcon=convertView.findViewById(R.id.list_icon);
             holder.listName=convertView.findViewById(R.id.list_name);
             convertView.setTag(holder);
         }
@@ -53,11 +55,25 @@ public class TaskListAdapter extends BaseAdapter {
         }
         UserTaskList taskList=taskLists.get(position);
         holder.listName.setText(taskList.getInfo().getName());
+        long id=taskList.getInfo().getId();
+        if(id==0L){
+            holder.listIcon.setImageResource(R.drawable.home);
+        }
+        else if(id==1L){
+            holder.listIcon.setImageResource(R.drawable.important);
+        }
+        else if(id==2L){
+            holder.listIcon.setImageResource(R.drawable.group);
+        }
+        else{
+            holder.listIcon.setImageResource(R.drawable.list);
+        }
         holder.listName.setWillNotDraw(false);
         return convertView;
     }
 
     public final class ViewHolder{
+        public ImageView listIcon;
         public TextView listName;
     }
 }

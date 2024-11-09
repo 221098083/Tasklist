@@ -16,6 +16,7 @@ import com.se.tasklist.task.Task;
 import com.se.tasklist.task.TaskManager;
 import com.se.tasklist.task.UserTaskList;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MessageListener {
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     List<Task> currentTaskListContent;
 
-    private long tasklist_selected=0;
+    private long tasklist_selected=0L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     @Override
     public List<UserTaskList> getDefaultTaskLists(){
         if(this.defaultTaskLists==null) {
-            this.defaultTaskLists = this.taskManager.getDefaultTaskLists();
+            this.defaultTaskLists = new LinkedList<>(this.taskManager.getDefaultTaskLists());
         }
         return this.defaultTaskLists;
     }
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     @Override
     public List<UserTaskList> getUserTaskLists(){
         if(this.userTaskLists==null) {
-            this.userTaskLists=taskManager.getUserTaskLists();
+            this.userTaskLists=new LinkedList<>(taskManager.getUserTaskLists());
         }
         return this.userTaskLists;
     }
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     @Override
     public List<Label> getLabels(){
         if(this.labels==null) {
-            this.labels=taskManager.getLabels();
+            this.labels=new LinkedList<>(taskManager.getLabels());
         }
         return this.labels;
     }
@@ -131,9 +132,15 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     }
 
     @Override
+    public void createLabel(String name){
+        Label label=taskManager.createLabel(name);
+        this.labels.add(label);
+    }
+
+    @Override
     public List<Task> getCurrentTaskListContent(){
         if(this.currentTaskListContent==null){
-            this.currentTaskListContent=taskManager.getTasksFromList(tasklist_selected);
+            this.currentTaskListContent=new LinkedList<>(taskManager.getTasksFromList(tasklist_selected));
         }
         return this.currentTaskListContent;
     }
@@ -146,9 +153,16 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     @Override
     public String getCurrentTaskListName(){
-        if(tasklist_selected==0)
-            return "Home";
         return taskManager.getTaskListById(tasklist_selected).getInfo().getName();
+    }
+
+    @Override
+    public int getLabelColor(){
+        if(tasklist_selected<500){
+            return 0xFFFFCF7F;
+        }
+        Label label=(Label)(taskManager.getTaskListById(tasklist_selected));
+        return label.getInfo().getColor();
     }
 
 }

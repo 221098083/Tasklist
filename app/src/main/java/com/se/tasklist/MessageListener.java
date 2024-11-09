@@ -22,8 +22,12 @@ public interface MessageListener {
 
     public void createTaskList(String name);
 
+    public void createLabel(String name);
+
     public void createTask(String name);
 
     public String getCurrentTaskListName();
+
+    public int getLabelColor();
 
 }

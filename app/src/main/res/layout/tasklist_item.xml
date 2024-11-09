@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="30dp"
     android:background="@color/transparent">
 
     <ImageView
-        android:id="@+id/item_icon"
+        android:id="@+id/list_icon"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -23,7 +23,7 @@
         android:background="@color/transparent"
         android:gravity="center_vertical"
         android:text="Task1"
-        android:textSize="25sp"
+        android:textSize="20sp"
         />
 
 </LinearLayout>

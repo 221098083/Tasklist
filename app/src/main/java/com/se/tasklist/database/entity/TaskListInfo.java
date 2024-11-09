@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey;
 import com.se.tasklist.task.TaskList;
 
 @Entity
-public class TaskListInfo {
+public class TaskListInfo implements EntityInfo{
     @PrimaryKey(autoGenerate = false)
-    private Long id;
+    private long id;
 
     private String name;
 
@@ -16,14 +16,16 @@ public class TaskListInfo {
         this.name=name;
     }
 
-    public Long getId() {
+    @Override
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

@@ -4,24 +4,37 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class LabelInfo {
+public class LabelInfo implements EntityInfo{
     @PrimaryKey(autoGenerate = false)
-    private Long id;
+    private long id;
 
     private String name;
 
-    public LabelInfo(String name){
+    private int color;
+
+    public LabelInfo(String name,int color){
         this.name=name;
+        this.color=color;
     }
 
-    public Long getId() {
+    @Override
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    @Override
     public String getName() {
         return name;
     }

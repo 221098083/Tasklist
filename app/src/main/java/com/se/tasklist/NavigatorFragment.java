@@ -28,6 +28,9 @@ public class NavigatorFragment extends Fragment {
     ImageButton createListButton;
     EditText createListText;
 
+    ImageButton createLabelButton;
+    EditText createLabelText;
+
     ListView defaultListGroup;
     ListView userListGroup;
     ListView labelListGroup;
@@ -75,6 +78,7 @@ public class NavigatorFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long id=defaultListAdapter.getItemId(i);
+                Log.d(TAG,"item selected:"+id);
                 listener.onTaskListSwitched(id);
             }
         });
@@ -104,6 +108,7 @@ public class NavigatorFragment extends Fragment {
 
         });
 
+        /*Listener: Create a new TaskList.*/
         createListButton=view.findViewById(R.id.create_list_button);
         createListText=view.findViewById(R.id.create_list_text);
 
@@ -120,6 +125,22 @@ public class NavigatorFragment extends Fragment {
             imm.hideSoftInputFromWindow(createListText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         });
 
+        /*Listener: Create a new label.*/
+        createLabelButton=view.findViewById(R.id.create_label_button);
+        createLabelText=view.findViewById(R.id.create_label_text);
+
+        createLabelButton.setOnClickListener(view1 -> {
+            String name=createLabelText.getText().toString();
+            if(name==null||name.length()==0){
+                return;
+            }
+            listener.createLabel(name);
+            labelAdapter.notifyDataSetChanged();
+            createLabelText.setText("");
+            createLabelText.clearFocus();
+            InputMethodManager imm = (InputMethodManager)this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(createLabelText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        });
 
         return view;
     }

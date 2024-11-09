@@ -1,10 +1,17 @@
 package com.se.tasklist.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.Shape;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.se.tasklist.R;
@@ -16,26 +23,26 @@ public class LabelAdapter extends BaseAdapter {
 
 
     private Context context;
-    private List<Label> taskLists;
+    private List<Label> labels;
 
-    public LabelAdapter(Context context, List<Label> taskLists) {
+    public LabelAdapter(Context context, List<Label> labels) {
         this.context = context;
-        this.taskLists = taskLists;
+        this.labels = labels;
     }
 
     @Override
     public int getCount() {
-        return taskLists.size();
+        return labels.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return taskLists.get(position);
+        return labels.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return taskLists.get(position).getInfo().getId();
+        return labels.get(position).getInfo().getId();
     }
 
     @Override
@@ -44,18 +51,23 @@ public class LabelAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.tasklist_item, null);
             holder = new ViewHolder();
-            holder.listName = convertView.findViewById(R.id.list_name);
+            holder.labelIcon=convertView.findViewById(R.id.list_icon);
+            holder.labelName = convertView.findViewById(R.id.list_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        Label taskList = taskLists.get(position);
-        holder.listName.setText(taskList.getInfo().getName());
-        holder.listName.setWillNotDraw(false);
+        Label label = labels.get(position);
+        @SuppressLint("UseCompatLoadingForDrawables") GradientDrawable icon=(GradientDrawable) context.getDrawable(R.drawable.list_title_label);
+        icon.setColor(label.getInfo().getColor());
+        holder.labelIcon.setImageDrawable(icon);
+        holder.labelName.setText(label.getInfo().getName());
+        holder.labelName.setWillNotDraw(false);
         return convertView;
     }
 
     public final class ViewHolder {
-        public TextView listName;
+        public ImageView labelIcon;
+        public TextView labelName;
     }
 }
