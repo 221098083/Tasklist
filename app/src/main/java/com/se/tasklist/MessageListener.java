@@ -67,4 +67,7 @@ public interface MessageListener {
      * @return the argb color of label with given id.*/
     int getLabelColor(long label_id);
 
+    void setTaskDone(long task_id,boolean done);
+    void setTaskImportant(long task_id,boolean is_important);
+
 }

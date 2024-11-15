@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -134,6 +135,16 @@ public class ListViewFragment extends Fragment {
         detailLabelIcon.setImageDrawable(icon);
         TextView detailLabelName=layout.findViewById(R.id.detail_label_name);
         detailLabelName.setText(listener.getLabelName(task.getInfo().getLabel()));
+
+        CheckBox taskImportant=layout.findViewById(R.id.task_important);
+        taskImportant.setTag(task);
+        taskImportant.setChecked(task.getInfo().getImportant()==1);
+        taskImportant.setOnCheckedChangeListener((compoundButton, b) -> {
+            listener.setTaskImportant(task.getInfo().getId(),b);
+            if(listener.getCurrentTaskListName().equals("Important")){
+                this.taskAdapter.notifyDataSetChanged();
+            }
+        });
 
         taskDetails.showAtLocation(view.findViewById(R.id.list_view_main), Gravity.BOTTOM|Gravity.END,0,0);
     }

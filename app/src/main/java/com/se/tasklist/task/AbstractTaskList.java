@@ -13,6 +13,8 @@ public abstract class AbstractTaskList implements TaskList{
 
     public void addTask(Task task) { this.tasks.add(task); }
 
+    public void removeTask(Task task){ this.tasks.remove(task); }
+
     public void sortTasks() { this.tasks.sort(Task::compareTo); }
 
 

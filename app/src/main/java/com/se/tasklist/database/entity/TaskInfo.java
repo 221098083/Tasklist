@@ -19,6 +19,7 @@ public class TaskInfo implements EntityInfo{
 
     private String ddl;
 
+    private int important;
     private int done;
 
     public TaskInfo(String name,long taskList){
@@ -28,6 +29,7 @@ public class TaskInfo implements EntityInfo{
         SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
         this.createTime= fmt.format(Calendar.getInstance().getTime());
         this.ddl=null;
+        this.important=0;
         this.done=0;
     }
 
@@ -72,6 +74,14 @@ public class TaskInfo implements EntityInfo{
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public int getImportant() {
+        return important;
+    }
+
+    public void setImportant(int important) {
+        this.important = important;
     }
 
     public int getDone() {

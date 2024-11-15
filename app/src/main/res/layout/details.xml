@@ -11,20 +11,30 @@
         android:background="@color/background"
         android:orientation="horizontal">
         <ImageView
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="20dp"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:background="@color/background"
             android:src="@drawable/list_title_label"
             />
         <TextView
             android:id="@+id/task_detail_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="5"
             android:layout_gravity="center_vertical"
             android:background="@color/background"
             android:textSize="30sp"
             android:text="MyList1"
+            />
+        <CheckBox
+            android:id="@+id/task_important"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical|right"
             />
     </LinearLayout>
 

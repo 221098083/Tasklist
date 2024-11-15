@@ -234,6 +234,10 @@ public class TaskManager {
             return task;
         }
 
+        public Task getTaskById(long task_id){
+            return this.tasks.get(task_id);
+        }
+
         public TaskList getTaskListById(long taskList_id){
             if(taskList_id<USER_TASKLIST_HIGH){
                 return this.taskLists.get(taskList_id);
@@ -248,6 +252,21 @@ public class TaskManager {
             TaskInfo info=task.getInfo();
             info.setDone((done?1:0));
             taskDao.update(info);
+        }
+
+        public void setTaskImportant(long task_id,boolean is_important){
+            Task task=this.tasks.get(task_id);
+            TaskInfo info=task.getInfo();
+            info.setImportant((is_important?1:0));
+            taskDao.update(info);
+            UserTaskList important=this.taskLists.get(1L);
+            if(is_important){
+                important.addTask(task);
+            }
+            else{
+                important.removeTask(task);
+            }
+
         }
 
     }
@@ -284,8 +303,16 @@ public class TaskManager {
         return taskDataManager.getTaskListById(taskList_id);
     }
 
+    public Task getTaskById(long task_id){
+        return taskDataManager.getTaskById(task_id);
+    }
+
     public void setTaskDone(long task_id,boolean done){
         this.taskDataManager.setTaskDone(task_id,done);
+    }
+
+    public void setTaskImportant(long task_id,boolean is_important){
+        this.taskDataManager.setTaskImportant(task_id,is_important);
     }
 
 }

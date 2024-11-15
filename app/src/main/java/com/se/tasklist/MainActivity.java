@@ -221,8 +221,22 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         return label.getInfo().getColor();
     }
 
+    @Override
     public void setTaskDone(long task_id,boolean done){
         this.taskManager.setTaskDone(task_id,done);
+    }
+
+    @Override
+    public void setTaskImportant(long task_id,boolean is_important){
+        this.taskManager.setTaskImportant(task_id,is_important);
+        if(tasklist_selected==1L){
+            if(is_important){
+                this.currentTaskListContent.add(taskManager.getTaskById(task_id));
+            }
+            else{
+                this.currentTaskListContent.remove(taskManager.getTaskById(task_id));
+            }
+        }
     }
 
 }
