@@ -1,12 +1,17 @@
 package com.se.tasklist.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.se.tasklist.MainActivity;
 import com.se.tasklist.R;
 import com.se.tasklist.task.Task;
 import com.se.tasklist.task.UserTaskList;
@@ -44,6 +49,12 @@ public class TaskAdapter extends BaseAdapter {
         if(convertView==null){
             convertView= LayoutInflater.from(context).inflate(R.layout.task_item,null);
             holder=new ViewHolder();
+            holder.taskDone=convertView.findViewById(R.id.task_done);
+            holder.taskDone.setOnCheckedChangeListener((compoundButton, b) -> {
+                MainActivity activity=(MainActivity)context;
+                ViewHolder viewHolder=(ViewHolder) compoundButton.getTag();
+                activity.setTaskDone(viewHolder.taskId,b);
+            });
             holder.taskName=convertView.findViewById(R.id.task_name);
             convertView.setTag(holder);
         }
@@ -51,13 +62,25 @@ public class TaskAdapter extends BaseAdapter {
             holder=(ViewHolder) convertView.getTag();
         }
         Task task=tasks.get(position);
+        holder.taskId=task.getInfo().getId();
         holder.taskName.setText(task.getInfo().getName());
         holder.taskName.setWillNotDraw(false);
+        holder.taskDone.setTag(holder);
+        if(task.getInfo().getDone()==1){
+            holder.taskDone.setChecked(true);
+        }
+        else{
+            holder.taskDone.setChecked(false);
+        }
+
+
         return convertView;
     }
 
     public final class ViewHolder{
+        public CheckBox taskDone;
         public TextView taskName;
+        public long taskId;
     }
 
 }

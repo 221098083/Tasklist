@@ -5,6 +5,9 @@ import androidx.room.PrimaryKey;
 
 import com.se.tasklist.task.TaskList;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 @Entity
 public class TaskListInfo implements EntityInfo{
     @PrimaryKey(autoGenerate = false)
@@ -12,8 +15,12 @@ public class TaskListInfo implements EntityInfo{
 
     private String name;
 
+    private String createTime;
+
     public TaskListInfo(String name){
         this.name=name;
+        SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
+        this.createTime= fmt.format(Calendar.getInstance().getTime());
     }
 
     @Override
@@ -32,5 +39,13 @@ public class TaskListInfo implements EntityInfo{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

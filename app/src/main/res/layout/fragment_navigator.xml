@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="vertical">
         <ListView
             android:id="@+id/default_listgroup"
@@ -43,10 +45,11 @@
                 android:id="@+id/create_list_text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="5"
+                android:layout_weight="6"
                 android:layout_marginRight="10dp"
                 android:paddingStart="10dp"
-                android:hint="Add new list"
+                android:hint="New list"
+                android:textSize="15sp"
                 android:background="@drawable/shape_rectangle"
                 />
         </LinearLayout>
@@ -76,10 +79,11 @@
                 android:id="@+id/create_label_text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="5"
+                android:layout_weight="6"
                 android:layout_marginRight="10dp"
                 android:paddingStart="10dp"
-                android:hint="Add new label"
+                android:hint="New label"
+                android:textSize="15sp"
                 android:background="@drawable/shape_rectangle"
                 />
         </LinearLayout>

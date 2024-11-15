@@ -2,8 +2,13 @@ package com.se.tasklist;
 import static android.content.ContentValues.TAG;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -89,6 +94,44 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         }
     }
 
+    /*FOLLOWING CODE IS FROM: https://blog.csdn.net/qq_60387902/article/details/129692144 */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if (isShouldHideInput(v, ev)) {
+                v.clearFocus();
+                InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+            return super.dispatchTouchEvent(ev);
+        }
+        if (getWindow().superDispatchTouchEvent(ev)) {
+            return true;
+        }
+        return onTouchEvent(ev);
+    }
+    public boolean isShouldHideInput(View v, MotionEvent event) {
+        if (v != null && (v instanceof EditText)) {
+            int[] leftTop = {0, 0};
+            v.getLocationInWindow(leftTop);
+            int left = leftTop[0];
+            int top = leftTop[1];
+            int bottom = top + v.getHeight();
+            int right = left + v.getWidth();
+            if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* */
+
     public Activity getActivity(){
         return this;
     }
@@ -157,12 +200,30 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     }
 
     @Override
+    public String getLabelName(long label_id){
+        if(tasklist_selected<500){
+            return "Set a label";
+        }
+        Label label=(Label)(taskManager.getTaskListById(label_id));
+        return label.getInfo().getName();
+    }
+
+    @Override
     public int getLabelColor(){
         if(tasklist_selected<500){
             return 0xFFFFCF7F;
         }
         Label label=(Label)(taskManager.getTaskListById(tasklist_selected));
         return label.getInfo().getColor();
+    }
+
+    public int getLabelColor(long label_id){
+        Label label=(Label)(taskManager.getTaskListById(label_id));
+        return label.getInfo().getColor();
+    }
+
+    public void setTaskDone(long task_id,boolean done){
+        this.taskManager.setTaskDone(task_id,done);
     }
 
 }

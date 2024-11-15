@@ -243,6 +243,13 @@ public class TaskManager {
             }
         }
 
+        public void setTaskDone(long task_id,boolean done){
+            Task task=this.tasks.get(task_id);
+            TaskInfo info=task.getInfo();
+            info.setDone((done?1:0));
+            taskDao.update(info);
+        }
+
     }
 
     public List<UserTaskList> getDefaultTaskLists(){
@@ -275,6 +282,10 @@ public class TaskManager {
 
     public TaskList getTaskListById(long taskList_id){
         return taskDataManager.getTaskListById(taskList_id);
+    }
+
+    public void setTaskDone(long task_id,boolean done){
+        this.taskDataManager.setTaskDone(task_id,done);
     }
 
 }

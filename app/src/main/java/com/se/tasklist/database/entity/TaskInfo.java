@@ -3,6 +3,9 @@ package com.se.tasklist.database.entity;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 @Entity
 public class TaskInfo implements EntityInfo{
     @PrimaryKey(autoGenerate = false)
@@ -12,13 +15,20 @@ public class TaskInfo implements EntityInfo{
     private long taskList;
     private long label;
 
+    private String createTime;
+
     private String ddl;
+
+    private int done;
 
     public TaskInfo(String name,long taskList){
         this.name=name;
         this.taskList=taskList;
         this.label=-1L;
+        SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
+        this.createTime= fmt.format(Calendar.getInstance().getTime());
         this.ddl=null;
+        this.done=0;
     }
 
     @Override
@@ -53,6 +63,23 @@ public class TaskInfo implements EntityInfo{
 
     public void setLabel(long label) {
         this.label = label;
+    }
+
+    @Override
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public int getDone() {
+        return done;
+    }
+
+    public void setDone(int done) {
+        this.done = done;
     }
 
     public String getDdl() {

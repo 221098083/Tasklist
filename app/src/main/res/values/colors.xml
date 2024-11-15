@@ -7,4 +7,5 @@
     <color name="background">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
     <color name="divider">#FFFFCF7F</color>
+    <color name="gray">#FF999999</color>
 </resources>

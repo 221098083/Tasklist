@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/navigator">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/background"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/background"
+            android:src="@drawable/list_title_label"
+            />
+        <TextView
+            android:id="@+id/task_detail_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/background"
+            android:textSize="30sp"
+            android:text="MyList1"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/detail_label_icon"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/navigator"
+            android:src="@drawable/list_title_label"
+            />
+        <TextView
+            android:id="@+id/detail_label_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/navigator"
+            android:textSize="25sp"
+            android:layout_gravity="center_vertical"
+            android:text="Label1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:id="@+id/detail_ddl_icon"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/navigator"
+            android:src="@drawable/date"
+            />
+        <TextView
+            android:id="@+id/detail_ddl_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/navigator"
+            android:textSize="25sp"
+            android:layout_gravity="center_vertical"
+            android:text="Set Deadline" />
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_rectangle"
+        android:gravity="top"
+        android:padding="10dp"
+        android:layout_margin="30dp"
+        android:hint="Add comments" />
+
+</LinearLayout>

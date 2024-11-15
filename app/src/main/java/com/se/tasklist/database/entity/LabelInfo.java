@@ -3,6 +3,9 @@ package com.se.tasklist.database.entity;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 @Entity
 public class LabelInfo implements EntityInfo{
     @PrimaryKey(autoGenerate = false)
@@ -12,9 +15,13 @@ public class LabelInfo implements EntityInfo{
 
     private int color;
 
+    private String createTime;
+
     public LabelInfo(String name,int color){
         this.name=name;
         this.color=color;
+        SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
+        this.createTime= fmt.format(Calendar.getInstance().getTime());
     }
 
     @Override
@@ -41,5 +48,13 @@ public class LabelInfo implements EntityInfo{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }
