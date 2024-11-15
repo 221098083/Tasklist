@@ -3,6 +3,7 @@ package com.se.tasklist;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,18 +19,21 @@ import com.se.tasklist.adapter.TaskListAdapter;
 
 public class NavigatorFragment extends Fragment {
 
+    /* Message Listener.*/
     private MessageListener listener;
 
+    /* Control components.*/
+    //For task list creation.
     ImageButton createListButton;
     EditText createListText;
-
+    //For label creation.
     ImageButton createLabelButton;
     EditText createLabelText;
-
+    //Task list groups.
     ListView defaultListGroup;
     ListView userListGroup;
     ListView labelListGroup;
-
+    //Adapters for task list groups.
     TaskListAdapter defaultListAdapter;
     TaskListAdapter userListAdapter;
     LabelAdapter labelAdapter;
@@ -39,12 +43,11 @@ public class NavigatorFragment extends Fragment {
     }
 
     public static NavigatorFragment newInstance() {
-        NavigatorFragment fragment = new NavigatorFragment();
-        return fragment;
+        return new NavigatorFragment();
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(@NonNull Context context){
         super.onAttach(context);
         try{
             this.listener=(MessageListener)context;
@@ -66,6 +69,7 @@ public class NavigatorFragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_navigator, container, false);
 
+        //Default task list exhibition.
         defaultListGroup=view.findViewById(R.id.default_listgroup);
         defaultListAdapter=new TaskListAdapter(listener.getActivity(),listener.getDefaultTaskLists());
         defaultListGroup.setAdapter(defaultListAdapter);
@@ -74,6 +78,7 @@ public class NavigatorFragment extends Fragment {
             listener.onTaskListSwitched(id);
         });
 
+        //User task list exhibition.
         userListGroup=view.findViewById(R.id.user_listgroup);
         userListAdapter=new TaskListAdapter(listener.getActivity(),listener.getUserTaskLists());
         userListGroup.setAdapter(userListAdapter);
@@ -82,6 +87,7 @@ public class NavigatorFragment extends Fragment {
             listener.onTaskListSwitched(id);
         });
 
+        //Label list exhibition.
         labelListGroup=view.findViewById(R.id.label_listgroup);
         labelAdapter=new LabelAdapter(listener.getActivity(),listener.getLabels());
         labelListGroup.setAdapter(labelAdapter);
@@ -96,7 +102,7 @@ public class NavigatorFragment extends Fragment {
 
         createListButton.setOnClickListener(view1 -> {
             String name=createListText.getText().toString();
-            if(name==null||name.length()==0){
+            if(name.length() == 0){
                 return;
             }
             listener.createTaskList(name);

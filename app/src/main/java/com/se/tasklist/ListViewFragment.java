@@ -5,15 +5,14 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -50,12 +49,11 @@ public class ListViewFragment extends Fragment {
     }
 
     public static ListViewFragment newInstance() {
-        ListViewFragment fragment = new ListViewFragment();
-        return fragment;
+        return new ListViewFragment();
     }
 
     @Override
-    public void onAttach(Context context){
+    public void onAttach(@NonNull Context context){
         super.onAttach(context);
         try{
             this.listener=(MessageListener)context;
@@ -78,12 +76,9 @@ public class ListViewFragment extends Fragment {
         taskListContent=view.findViewById(R.id.task_list_content);
         taskAdapter=new TaskAdapter(listener.getActivity(),listener.getCurrentTaskListContent());
         taskListContent.setAdapter(taskAdapter);
-        taskListContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Task task=(Task)taskAdapter.getItem(i);
-                showDetail(task);
-            }
+        taskListContent.setOnItemClickListener((adapterView, view, i, l) -> {
+            Task task=(Task)taskAdapter.getItem(i);
+            showDetail(task);
         });
 
         listTitleLabel=view.findViewById(R.id.list_title_label);
@@ -140,7 +135,7 @@ public class ListViewFragment extends Fragment {
         TextView detailLabelName=layout.findViewById(R.id.detail_label_name);
         detailLabelName.setText(listener.getLabelName(task.getInfo().getLabel()));
 
-        taskDetails.showAtLocation(view.findViewById(R.id.list_view_main), Gravity.BOTTOM|Gravity.RIGHT,0,0);
+        taskDetails.showAtLocation(view.findViewById(R.id.list_view_main), Gravity.BOTTOM|Gravity.END,0,0);
     }
 }
 

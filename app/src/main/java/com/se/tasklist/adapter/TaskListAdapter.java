@@ -8,9 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.se.tasklist.NavigatorFragment;
 import com.se.tasklist.R;
-import com.se.tasklist.task.TaskList;
 import com.se.tasklist.task.UserTaskList;
 
 import java.util.List;

@@ -7,7 +7,6 @@ import android.util.Log;
 import com.se.tasklist.database.entity.TaskInfo;
 
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,7 +18,7 @@ public class Task implements Comparable<Task>{
     public enum Task_Cycle{
         ONCE,
         WEEKLY,
-        MONTHLY;
+        MONTHLY
     }
 
     public enum Remind_Schema{
@@ -44,7 +43,7 @@ public class Task implements Comparable<Task>{
     public int compareTo(Task another){
         //TODO: implement the logic of task comparing.
         SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
-        Date d1= null,d2=null;
+        Date d1,d2;
         try {
             d1 = fmt.parse(this.getInfo().getCreateTime());
             d2 = fmt.parse(another.getInfo().getCreateTime());

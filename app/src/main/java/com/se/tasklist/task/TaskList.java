@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public interface TaskList extends Iterable<Task>{
-    public List<Task> getTasks();
-    public EntityInfo getInfo();
+    List<Task> getTasks();
+    EntityInfo getInfo();
     default Iterator<Task> iterator(){return getTasks().iterator();}
 }

@@ -1,20 +1,16 @@
 package com.se.tasklist.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.se.tasklist.MainActivity;
 import com.se.tasklist.R;
 import com.se.tasklist.task.Task;
-import com.se.tasklist.task.UserTaskList;
 
 import java.util.List;
 
@@ -66,13 +62,7 @@ public class TaskAdapter extends BaseAdapter {
         holder.taskName.setText(task.getInfo().getName());
         holder.taskName.setWillNotDraw(false);
         holder.taskDone.setTag(holder);
-        if(task.getInfo().getDone()==1){
-            holder.taskDone.setChecked(true);
-        }
-        else{
-            holder.taskDone.setChecked(false);
-        }
-
+        holder.taskDone.setChecked(task.getInfo().getDone() == 1);
 
         return convertView;
     }
