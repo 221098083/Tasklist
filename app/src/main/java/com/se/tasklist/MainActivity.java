@@ -255,4 +255,9 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         this.taskManager.deleteTask(task_id);
     }
 
+    @Override
+    public boolean isCurrentLabel(){
+        return tasklist_selected>=500;
+    }
+
 }

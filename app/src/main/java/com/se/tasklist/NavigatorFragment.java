@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.se.tasklist.adapter.LabelAdapter;
 import com.se.tasklist.adapter.TaskListAdapter;
+import com.se.tasklist.utils.Toaster;
 
 public class NavigatorFragment extends Fragment {
 
@@ -105,6 +106,10 @@ public class NavigatorFragment extends Fragment {
             if(name.length() == 0){
                 return;
             }
+            if(name.length()>5){
+                Toaster.toast(this.getActivity(),"Name of task lists no more than 5 words!");
+                return;
+            }
             listener.createTaskList(name);
             userListAdapter.notifyDataSetChanged();
             createListText.setText("");
@@ -120,6 +125,10 @@ public class NavigatorFragment extends Fragment {
         createLabelButton.setOnClickListener(view1 -> {
             String name=createLabelText.getText().toString();
             if(name.length()==0){
+                return;
+            }
+            if(name.length()>5){
+                Toaster.toast(this.getActivity(),"Name of task lists no more than 5 words!");
                 return;
             }
             listener.createLabel(name);

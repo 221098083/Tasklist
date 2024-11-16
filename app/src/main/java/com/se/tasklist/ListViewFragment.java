@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.se.tasklist.adapter.TaskAdapter;
 import com.se.tasklist.task.Task;
+import com.se.tasklist.utils.Toaster;
 
 import java.util.Calendar;
 
@@ -119,6 +120,10 @@ public class ListViewFragment extends Fragment {
             if (name.length() == 0) {
                 return;
             }
+            if(name.length()>20){
+                Toaster.toast(this.getActivity(),"Name of task no more than 20 words!");
+                return;
+            }
             listener.createTask(name);
             createTaskText.setText("");
             createTaskText.clearFocus();
@@ -137,8 +142,8 @@ public class ListViewFragment extends Fragment {
         icon.setColor(listener.getLabelColor());
         listTitleLabel.setImageDrawable(icon);
         taskListName.setText(listener.getCurrentTaskListName());
-        if(listener.getCurrentTaskListName().equals("Important")){
-            createTaskText.setHint("");
+        if(listener.getCurrentTaskListName().equals("Important")||listener.getCurrentTaskListName().equals("Group")||listener.isCurrentLabel()){
+            createTaskText.setHint("Ciallo!>P<");
             createTaskText.setFocusableInTouchMode(false);
         }
         else {
@@ -159,6 +164,7 @@ public class ListViewFragment extends Fragment {
         taskDetailName.setText(task.getInfo().getName());
 
         ImageView detailLabelIcon=layout.findViewById(R.id.detail_label_icon);
+        TextView detailLabelName=layout.findViewById(R.id.detail_label_name);
         @SuppressLint("UseCompatLoadingForDrawables") GradientDrawable icon=(GradientDrawable) this.getActivity().getDrawable(R.drawable.list_title_label);
         if(task.getInfo().getLabel()==-1L){
             icon.setColor(getResources().getColor(R.color.divider, this.getActivity().getTheme()));
@@ -167,8 +173,11 @@ public class ListViewFragment extends Fragment {
             icon.setColor(listener.getLabelColor(task.getInfo().getLabel()));
         }
         detailLabelIcon.setImageDrawable(icon);
-        TextView detailLabelName=layout.findViewById(R.id.detail_label_name);
         detailLabelName.setText(listener.getLabelName(task.getInfo().getLabel()));
+        detailLabelName.setOnClickListener(view -> {
+            //TODO: IMPLEMENT FUNCTION OF SETTING LABEL FOR TASKS.
+            Toaster.toast(this.getActivity(),"Not done yet QAQ");
+        });
 
         CheckBox taskImportant=layout.findViewById(R.id.task_important);
         taskImportant.setTag(task);
@@ -182,9 +191,7 @@ public class ListViewFragment extends Fragment {
 
         TextView deadlineName=layout.findViewById(R.id.detail_ddl_name);
         deadlineName.setText(task.getInfo().getDdl());
-
         deadlineName.setOnClickListener(view -> {
-
             int currentYear=Calendar.getInstance().get(Calendar.YEAR);
             int currentMonth=Calendar.getInstance().get(Calendar.MONTH);
             int currentDayOfMonth=Calendar.getInstance().get(Calendar.DAY_OF_MONTH);

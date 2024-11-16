@@ -71,5 +71,6 @@ public interface MessageListener {
     void setTaskDdl(long task_id,int year,int month,int dayOfMonth);
     void setTaskImportant(long task_id,boolean is_important);
     void deleteTask(long task_id);
+    boolean isCurrentLabel();
 
 }
