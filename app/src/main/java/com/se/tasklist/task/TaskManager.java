@@ -165,10 +165,6 @@ public class TaskManager {
             }
         }
 
-        public List<Task> getTasksFromLabel(long label_id){
-            return this.labels.get(label_id).getTasks();
-        }
-
         public UserTaskList createTaskList(String name){
             TaskListInfo info=new TaskListInfo(name);
             long id;
@@ -186,6 +182,31 @@ public class TaskManager {
             UserTaskList taskList=new UserTaskList(info);
             this.taskLists.put(id,taskList);
             return taskList;
+        }
+
+        public void deleteTaskList(long taskList_id){
+
+            if(taskList_id<USER_TASKLIST_HIGH){
+                UserTaskList taskList=this.taskLists.get(taskList_id);
+                for(Task task:taskList){
+                    deleteTask(task.getInfo().getId());
+                }
+                TaskListInfo listInfo=taskList.getInfo();
+                this.taskListDao.delete(listInfo);
+                this.taskLists.remove(taskList_id);
+            }
+            else{
+                Label label=this.labels.get(taskList_id);
+                for(Task task:label){
+                    TaskInfo info=task.getInfo();
+                    info.setLabel(-1L);
+                    this.taskDao.update(info);
+                }
+                LabelInfo listInfo=label.getInfo();
+                this.labelDao.delete(listInfo);
+                this.labels.remove(taskList_id);
+            }
+
         }
 
         public Label createLabel(String name){
@@ -353,6 +374,10 @@ public class TaskManager {
 
     public void deleteTask(long task_id){
         this.taskDataManager.deleteTask(task_id);
+    }
+
+    public void deleteTaskList(long taskList_id){
+        this.taskDataManager.deleteTaskList(taskList_id);
     }
 
 }

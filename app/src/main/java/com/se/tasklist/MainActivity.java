@@ -255,6 +255,29 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         this.taskManager.deleteTask(task_id);
     }
 
+    public void deleteTaskList(long taskList_id){
+        this.taskManager.deleteTaskList(taskList_id);
+        if(taskList_id<500){
+            for(UserTaskList taskList:this.userTaskLists){
+                if(taskList.getInfo().getId()==taskList_id){
+                    userTaskLists.remove(taskList);
+                    break;
+                }
+            }
+        }
+        else{
+            for(Label label:this.labels){
+                if(label.getInfo().getId()==taskList_id){
+                    labels.remove(label);
+                    break;
+                }
+            }
+        }
+        if(taskList_id==tasklist_selected) {
+            onTaskListSwitched(0L);
+        }
+    }
+
     @Override
     public boolean isCurrentLabel(){
         return tasklist_selected>=500;

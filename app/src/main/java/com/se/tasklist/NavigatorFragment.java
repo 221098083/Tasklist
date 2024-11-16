@@ -1,5 +1,6 @@
 package com.se.tasklist;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -10,12 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.se.tasklist.adapter.LabelAdapter;
 import com.se.tasklist.adapter.TaskListAdapter;
+import com.se.tasklist.task.Label;
+import com.se.tasklist.task.Task;
+import com.se.tasklist.task.UserTaskList;
 import com.se.tasklist.utils.Toaster;
 
 public class NavigatorFragment extends Fragment {
@@ -118,6 +123,23 @@ public class NavigatorFragment extends Fragment {
             imm.hideSoftInputFromWindow(createListText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         });
 
+        /*Listener: Delete a TaskList.*/
+        userListGroup.setOnItemLongClickListener((adapterView, view15, i, l) -> {
+            UserTaskList taskList = (UserTaskList) userListAdapter.getItem(i);
+            AlertDialog.Builder builder=new AlertDialog.Builder(listener.getActivity());
+            builder.setMessage("Delete this task list?");
+
+            builder.setPositiveButton(getResources().getText(R.string.yes), (dialogInterface, i12) -> {
+                listener.deleteTaskList(taskList.getInfo().getId());
+                userListAdapter.notifyDataSetChanged();
+            });
+            builder.setNegativeButton(getResources().getText(R.string.no), (dialogInterface, i1) -> {});
+
+            AlertDialog dialog=builder.create();
+            dialog.show();
+            return true;
+        });
+
         /*Listener: Create a new label.*/
         createLabelButton=view.findViewById(R.id.create_label_button);
         createLabelText=view.findViewById(R.id.create_label_text);
@@ -137,6 +159,23 @@ public class NavigatorFragment extends Fragment {
             createLabelText.clearFocus();
             InputMethodManager imm = (InputMethodManager)listener.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(createLabelText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        });
+
+        /*Listener: Delete a label.*/
+        labelListGroup.setOnItemLongClickListener((adapterView, view15, i, l) -> {
+            Label label = (Label) labelAdapter.getItem(i);
+            AlertDialog.Builder builder=new AlertDialog.Builder(listener.getActivity());
+            builder.setMessage("Delete this label?");
+
+            builder.setPositiveButton(getResources().getText(R.string.yes), (dialogInterface, i12) -> {
+                listener.deleteTaskList(label.getInfo().getId());
+                labelAdapter.notifyDataSetChanged();
+            });
+            builder.setNegativeButton(getResources().getText(R.string.no), (dialogInterface, i1) -> {});
+
+            AlertDialog dialog=builder.create();
+            dialog.show();
+            return true;
         });
 
         return view;
