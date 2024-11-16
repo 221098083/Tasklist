@@ -227,6 +227,11 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     }
 
     @Override
+    public void setTaskDdl(long task_id,int year,int month,int dayOfMonth){
+        this.taskManager.setTaskDdl(task_id,year,month,dayOfMonth);
+    }
+
+    @Override
     public void setTaskImportant(long task_id,boolean is_important){
         this.taskManager.setTaskImportant(task_id,is_important);
         if(tasklist_selected==1L){
@@ -237,6 +242,17 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
                 this.currentTaskListContent.remove(taskManager.getTaskById(task_id));
             }
         }
+    }
+
+    @Override
+    public void deleteTask(long task_id){
+        for(Task task:currentTaskListContent){
+            if(task.getInfo().getId()==task_id){
+                currentTaskListContent.remove(task);
+                break;
+            }
+        }
+        this.taskManager.deleteTask(task_id);
     }
 
 }

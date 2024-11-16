@@ -28,7 +28,7 @@ public class TaskInfo implements EntityInfo{
         this.label=-1L;
         SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
         this.createTime= fmt.format(Calendar.getInstance().getTime());
-        this.ddl=null;
+        this.ddl="Not set";
         this.important=0;
         this.done=0;
     }

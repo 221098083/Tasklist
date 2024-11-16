@@ -234,6 +234,30 @@ public class TaskManager {
             return task;
         }
 
+        public void deleteTask(long task_id){
+            Task task=this.tasks.get(task_id);
+            this.tasks.remove(task);
+
+            UserTaskList taskList=this.taskLists.get(task.getInfo().getTaskList());
+            taskList.removeTask(task);
+
+            if(task.getInfo().getTaskList()!=0L){
+                UserTaskList home=this.taskLists.get(0L);
+                home.removeTask(task);
+            }
+            if(task.getInfo().getLabel()!=-1L){
+                Label label=this.labels.get(task.getInfo().getLabel());
+                label.removeTask(task);
+            }
+            if(task.getInfo().getImportant()==1){
+                UserTaskList important=this.taskLists.get(1L);
+                important.removeTask(task);
+            }
+
+            TaskInfo info=task.getInfo();
+            taskDao.delete(info);
+        }
+
         public Task getTaskById(long task_id){
             return this.tasks.get(task_id);
         }
@@ -251,6 +275,14 @@ public class TaskManager {
             Task task=this.tasks.get(task_id);
             TaskInfo info=task.getInfo();
             info.setDone((done?1:0));
+            taskDao.update(info);
+        }
+
+        public void setTaskDdl(long task_id,int year,int month,int dayOfMonth){
+            Task task=this.tasks.get(task_id);
+            TaskInfo info=task.getInfo();
+            String fmt_ddl=""+year+"-"+month+"-"+dayOfMonth;
+            info.setDdl(fmt_ddl);
             taskDao.update(info);
         }
 
@@ -311,8 +343,16 @@ public class TaskManager {
         this.taskDataManager.setTaskDone(task_id,done);
     }
 
+    public void setTaskDdl(long task_id,int year,int month,int dayOfMonth){
+        this.taskDataManager.setTaskDdl(task_id,year,month,dayOfMonth);
+    }
+
     public void setTaskImportant(long task_id,boolean is_important){
         this.taskDataManager.setTaskImportant(task_id,is_important);
+    }
+
+    public void deleteTask(long task_id){
+        this.taskDataManager.deleteTask(task_id);
     }
 
 }

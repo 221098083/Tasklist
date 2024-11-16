@@ -3,5 +3,8 @@
     <string name="action_settings">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="comment_hint">This function is not implemented yet since it is minor.
+        But you can type something for fun here :> </string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

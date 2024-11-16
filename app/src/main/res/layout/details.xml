@@ -95,6 +95,6 @@
         android:gravity="top"
         android:padding="10dp"
         android:layout_margin="30dp"
-        android:hint="Add comments" />
+        android:hint="@string/comment_hint" />
 
 </LinearLayout>

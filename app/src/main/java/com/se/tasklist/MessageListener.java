@@ -68,6 +68,8 @@ public interface MessageListener {
     int getLabelColor(long label_id);
 
     void setTaskDone(long task_id,boolean done);
+    void setTaskDdl(long task_id,int year,int month,int dayOfMonth);
     void setTaskImportant(long task_id,boolean is_important);
+    void deleteTask(long task_id);
 
 }
