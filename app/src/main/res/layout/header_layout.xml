@@ -5,12 +5,11 @@
     android:background="@color/header">
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/title_icon"
-        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
         android:layout_marginLeft="10dp"
-        />
+        android:src="@drawable/title_icon" />
 
     <ImageView
         android:layout_width="50dp"

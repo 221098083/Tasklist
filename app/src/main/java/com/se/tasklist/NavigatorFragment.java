@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -19,7 +18,6 @@ import android.widget.ListView;
 import com.se.tasklist.adapter.LabelAdapter;
 import com.se.tasklist.adapter.TaskListAdapter;
 import com.se.tasklist.task.Label;
-import com.se.tasklist.task.Task;
 import com.se.tasklist.task.UserTaskList;
 import com.se.tasklist.utils.Toaster;
 

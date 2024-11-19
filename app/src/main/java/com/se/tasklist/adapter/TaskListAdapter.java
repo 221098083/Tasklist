@@ -15,8 +15,8 @@ import java.util.List;
 
 public class TaskListAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<UserTaskList> taskLists;
+    private final Context context;
+    private final List<UserTaskList> taskLists;
 
     public TaskListAdapter(Context context,List<UserTaskList> taskLists){
         this.context=context;

@@ -5,5 +5,9 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
+    <style name="CustomCheckbox" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/star_checkbox_selector</item>
+    </style>
+
     <style name="Theme.Tasklist" parent="Base.Theme.Tasklist" />
 </resources>

@@ -1,6 +1,5 @@
 package com.se.tasklist.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +16,8 @@ import java.util.List;
 
 public class TaskAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<Task> tasks;
+    private final Context context;
+    private final List<Task> tasks;
 
     public TaskAdapter(Context context,List<Task> tasks){
         this.context=context;

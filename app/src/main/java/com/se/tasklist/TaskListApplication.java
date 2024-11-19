@@ -1,9 +1,7 @@
 package com.se.tasklist;
 
-import static android.content.ContentValues.TAG;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.room.Room;
 
@@ -25,7 +23,6 @@ public class TaskListApplication extends Application {
     @Override
     public void onTerminate(){
         super.onTerminate();
-        Log.d(TAG,"on Terminate.");
     }
 
     public UserInfoDatabase getUserInfoDatabase(){ return database; }

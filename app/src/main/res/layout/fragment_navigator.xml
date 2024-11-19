@@ -6,7 +6,6 @@
     android:background="@color/navigator"
     tools:context=".NavigatorFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,14 +17,14 @@
             android:id="@+id/default_listgroup"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_weight="7"
             android:background="@color/transparent"
             />
         <ListView
             android:id="@+id/user_listgroup"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_weight="7"
             android:background="@color/transparent"
             />
         <LinearLayout
@@ -37,6 +36,7 @@
                 android:id="@+id/create_list_button"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:scaleType="fitCenter"
                 android:layout_weight="1"
                 android:src="@drawable/add"
                 android:background="@color/navigator"
@@ -45,7 +45,7 @@
                 android:id="@+id/create_list_text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6"
+                android:layout_weight="4"
                 android:layout_marginRight="10dp"
                 android:paddingStart="10dp"
                 android:hint="New list"
@@ -58,7 +58,7 @@
             android:id="@+id/label_listgroup"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_weight="7"
             android:background="@color/transparent"
             />
 
@@ -72,6 +72,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:scaleType="fitCenter"
                 android:src="@drawable/add"
                 android:background="@color/navigator"
                 />
@@ -79,7 +80,7 @@
                 android:id="@+id/create_label_text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="6"
+                android:layout_weight="4"
                 android:layout_marginRight="10dp"
                 android:paddingStart="10dp"
                 android:hint="New label"

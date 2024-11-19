@@ -1,15 +1,12 @@
 package com.se.tasklist.task;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
-
 import com.se.tasklist.TaskListApplication;
 import com.se.tasklist.database.dao.*;
 import com.se.tasklist.database.entity.LabelInfo;
 import com.se.tasklist.database.entity.TaskInfo;
 import com.se.tasklist.database.entity.TaskListInfo;
 import com.se.tasklist.utils.RandomColorGenerator;
+import com.se.tasklist.exceptions.*;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -68,19 +65,21 @@ public class TaskManager {
         }
 
         public void initialize(){
-            if(TaskListApplication.getInstance()==null){
-                Log.d(TAG,"null instance.");
-            }
 
             this.taskDao = TaskListApplication.getInstance().getUserInfoDatabase().taskDao();
             this.taskListDao = TaskListApplication.getInstance().getUserInfoDatabase().taskListDao();
             this.labelDao = TaskListApplication.getInstance().getUserInfoDatabase().labelDao();
 
-            loadTasks();
-            loadTaskLists();
-            loadLabels();
+            try {
+                loadTasks();
+                loadTaskLists();
+                loadLabels();
 
-            InitializeTaskListsAndLabels();
+                InitializeTaskListsAndLabels();
+
+            } catch (Exception e){
+                throw new RuntimeException(e);
+            }
         }
 
         private void loadTasks(){
@@ -91,7 +90,7 @@ public class TaskManager {
             }
         }
 
-        private void loadTaskLists(){
+        private void loadTaskLists() throws TaskListIdOutOfRange{
             List<TaskListInfo> taskListInfos=this.taskListDao.queryAll();
             for(TaskListInfo info:taskListInfos){
                 UserTaskList taskList=new UserTaskList(info);
@@ -145,18 +144,17 @@ public class TaskManager {
             ret.remove(taskLists.get(0L));
             ret.remove(taskLists.get(1L));
             ret.remove(taskLists.get(2L));
-            ret.sort((t1,t2)->t1.compareTo(t2));
+            ret.sort(UserTaskList::compareTo);
             return ret;
         }
 
         public List<Label> getUserLabels(){
             List<Label> ret=new LinkedList<>(this.labels.values());
-            ret.sort((t1,t2)->t1.compareTo(t2));
+            ret.sort(Label::compareTo);
             return ret;
         }
 
         public List<Task> getTasksFromList(long taskList_id){
-            Log.d(TAG,"getting tasklist from List "+taskList_id);
             if(taskList_id<USER_TASKLIST_HIGH){
                 return this.taskLists.get(taskList_id).getTasks();
             }
@@ -165,7 +163,7 @@ public class TaskManager {
             }
         }
 
-        public UserTaskList createTaskList(String name){
+        public UserTaskList createTaskList(String name) throws TaskListIdOutOfRange {
             TaskListInfo info=new TaskListInfo(name);
             long id;
             for(id=0L;id<USER_TASKLIST_HIGH;++id){
@@ -174,8 +172,7 @@ public class TaskManager {
                 }
             }
             if(id==USER_TASKLIST_HIGH){
-                //TODO: THROW EXCEPTION
-                return null;
+                throw new TaskListIdOutOfRange();
             }
             info.setId(id);
             this.taskListDao.insert(info);
@@ -209,7 +206,7 @@ public class TaskManager {
 
         }
 
-        public Label createLabel(String name){
+        public Label createLabel(String name) throws LabelIdOutOfRange{
             int color=new RandomColorGenerator().generateRandomColor();
             LabelInfo info=new LabelInfo(name,color);
             long id;
@@ -219,8 +216,7 @@ public class TaskManager {
                 }
             }
             if(id==LABEL_HIGH){
-                //TODO: THROW EXCEPTION
-                return null;
+                throw new LabelIdOutOfRange();
             }
             info.setId(id);
             this.labelDao.insert(info);
@@ -229,9 +225,8 @@ public class TaskManager {
             return label;
         }
 
-        public Task createTask(String name,long taskList_id){
+        public Task createTask(String name,long taskList_id) throws TaskIdOutOfRange{
             TaskInfo info=new TaskInfo(name,taskList_id);
-            Log.d(TAG,"adding task to"+taskList_id);
             long id;
             for(id=0;id<MAX_TASK_COUNT;++id){
                 if(tasks.get(id)==null){
@@ -239,8 +234,7 @@ public class TaskManager {
                 }
             }
             if(id==MAX_TASK_COUNT){
-                //TODO:THROW EXCEPTION
-                return null;
+                throw new TaskIdOutOfRange();
             }
             info.setId(id);
             this.taskDao.insert(info);
@@ -340,15 +334,15 @@ public class TaskManager {
         return taskDataManager.getTasksFromList(taskList_id);
     }
 
-    public UserTaskList createTaskList(String name){
+    public UserTaskList createTaskList(String name) throws TaskListIdOutOfRange{
         return this.taskDataManager.createTaskList(name);
     }
 
-    public Label createLabel(String name){
+    public Label createLabel(String name) throws LabelIdOutOfRange{
         return this.taskDataManager.createLabel(name);
     }
 
-    public Task createTask(String name,long taskList_id){
+    public Task createTask(String name,long taskList_id) throws TaskIdOutOfRange{
         return this.taskDataManager.createTask(name,taskList_id);
     }
 

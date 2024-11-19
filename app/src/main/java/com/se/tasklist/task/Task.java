@@ -41,7 +41,6 @@ public class Task implements Comparable<Task>{
     }
 
     public int compareTo(Task another){
-        //TODO: implement the logic of task comparing.
         SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
         Date d1,d2;
         try {

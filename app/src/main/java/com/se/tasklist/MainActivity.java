@@ -20,6 +20,8 @@ import com.se.tasklist.task.Label;
 import com.se.tasklist.task.Task;
 import com.se.tasklist.task.TaskManager;
 import com.se.tasklist.task.UserTaskList;
+import com.se.tasklist.utils.Toaster;
+import com.se.tasklist.exceptions.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -57,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
     @Override
     protected void onStart(){
         super.onStart();
-
     }
 
     @Override
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
         }
     }
 
-    /*FOLLOWING CODE IS FROM: https://blog.csdn.net/qq_60387902/article/details/129692144 */
+    /* REFERENCE: FOLLOWING CODE IS FROM: https://blog.csdn.net/qq_60387902/article/details/129692144 */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
@@ -169,14 +170,22 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     @Override
     public void createTaskList(String name) {
-        UserTaskList taskList=taskManager.createTaskList(name);
-        this.userTaskLists.add(taskList);
+        try {
+            UserTaskList taskList=taskManager.createTaskList(name);
+            this.userTaskLists.add(taskList);
+        }catch (TaskListIdOutOfRange e){
+            Toaster.toast(this,"No more task lists allowed!");
+        }
     }
 
     @Override
     public void createLabel(String name){
-        Label label=taskManager.createLabel(name);
-        this.labels.add(label);
+        try {
+            Label label = taskManager.createLabel(name);
+            this.labels.add(label);
+        }catch (LabelIdOutOfRange e){
+            Toaster.toast(this,"No more labels allowed!");
+        }
     }
 
     @Override
@@ -189,8 +198,12 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     @Override
     public void createTask(String name){
-        Task task=taskManager.createTask(name,tasklist_selected);
-        currentTaskListContent.add(task);
+        try {
+            Task task = taskManager.createTask(name, tasklist_selected);
+            currentTaskListContent.add(task);
+        }catch (TaskIdOutOfRange e){
+            Toaster.toast(this,"No more tasks allowed!");
+        }
     }
 
     @Override
@@ -200,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     @Override
     public String getLabelName(long label_id){
-        if(tasklist_selected<500){
+        if(tasklist_selected<TaskManager.LABEL_LOW){
             return "Set a label";
         }
         Label label=(Label)(taskManager.getTaskListById(label_id));
@@ -280,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     @Override
     public boolean isCurrentLabel(){
-        return tasklist_selected>=500;
+        return tasklist_selected>=TaskManager.LABEL_LOW;
     }
 
 }

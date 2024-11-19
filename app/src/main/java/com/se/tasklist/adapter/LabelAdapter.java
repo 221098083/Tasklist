@@ -18,8 +18,8 @@ import java.util.List;
 public class LabelAdapter extends BaseAdapter {
 
 
-    private Context context;
-    private List<Label> labels;
+    private final Context context;
+    private final List<Label> labels;
 
     public LabelAdapter(Context context, List<Label> labels) {
         this.context = context;
