@@ -96,7 +96,7 @@ public class TaskManager {
                 UserTaskList taskList=new UserTaskList(info);
                 taskLists.put(info.getId(),taskList);
             }
-            if(this.taskLists.size()==0){
+            if(this.taskLists.isEmpty()){
                 /*First start of the application. Initialize information of the reserved lists.*/
                 createTaskList("Home");
                 createTaskList("Important");
@@ -296,7 +296,7 @@ public class TaskManager {
         public void setTaskDdl(long task_id,int year,int month,int dayOfMonth){
             Task task=this.tasks.get(task_id);
             TaskInfo info=task.getInfo();
-            String fmt_ddl=""+year+"-"+month+"-"+dayOfMonth;
+            String fmt_ddl=year+"-"+month+"-"+dayOfMonth;
             info.setDdl(fmt_ddl);
             taskDao.update(info);
         }
