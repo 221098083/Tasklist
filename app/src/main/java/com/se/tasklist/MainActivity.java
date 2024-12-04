@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     @Override
     public int getLabelColor(){
-        if(tasklist_selected<500){
+        if(tasklist_selected<TaskManager.LABEL_LOW){
             return 0xFFFFCF7F;
         }
         Label label=(Label)(taskManager.getTaskListById(tasklist_selected));
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements MessageListener {
 
     public void deleteTaskList(long taskList_id){
         this.taskManager.deleteTaskList(taskList_id);
-        if(taskList_id<500){
+        if(taskList_id<TaskManager.LABEL_LOW){
             for(UserTaskList taskList:this.userTaskLists){
                 if(taskList.getInfo().getId()==taskList_id){
                     userTaskLists.remove(taskList);

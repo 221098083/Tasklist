@@ -8,10 +8,7 @@ import com.se.tasklist.database.entity.TaskListInfo;
 import com.se.tasklist.utils.RandomColorGenerator;
 import com.se.tasklist.exceptions.*;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TaskManager {
 
@@ -25,9 +22,9 @@ public class TaskManager {
     * 500-999 for User Labels.*/
     //public static final int MAX_TASKLIST_COUNT=1000;
     public static final long USER_TASKLIST_LOW=3L;
-    public static final long USER_TASKLIST_HIGH=500L;
-    public static final long LABEL_LOW=500L;
-    public static final long LABEL_HIGH=1000L;
+    public static final long USER_TASKLIST_HIGH=50L;
+    public static final long LABEL_LOW=50L;
+    public static final long LABEL_HIGH=100L;
 
 
     private static TaskManager manager;
@@ -39,7 +36,7 @@ public class TaskManager {
     public static TaskManager initTaskManager(){
         if(manager==null){
             manager=new TaskManager();
-            manager.taskDataManager=manager.new TaskDataManager();
+            manager.taskDataManager=new TaskDataManager();
         }
         manager.taskDataManager.initialize();
         return manager;
@@ -48,7 +45,7 @@ public class TaskManager {
     /* TaskDataManager:
     * this inner class is intended for embedded data operation in its outer class TaskManager.
     * and the outer class TaskManager doesn't directly interact with the database but through the TaskDataManager object.*/
-    class TaskDataManager{
+    public static class TaskDataManager{
 
         private Map<Long,Task> tasks;
         private Map<Long,UserTaskList> taskLists;
@@ -58,7 +55,7 @@ public class TaskManager {
         private TaskListDao taskListDao;
         private LabelDao labelDao;
 
-        TaskDataManager(){
+        public TaskDataManager(){
             this.tasks=new HashMap<>();
             this.taskLists=new HashMap<>();
             this.labels=new HashMap<>();
@@ -69,6 +66,24 @@ public class TaskManager {
             this.taskDao = TaskListApplication.getInstance().getUserInfoDatabase().taskDao();
             this.taskListDao = TaskListApplication.getInstance().getUserInfoDatabase().taskListDao();
             this.labelDao = TaskListApplication.getInstance().getUserInfoDatabase().labelDao();
+
+            try {
+                loadTasks();
+                loadTaskLists();
+                loadLabels();
+
+                InitializeTaskListsAndLabels();
+
+            } catch (Exception e){
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void initialize(TaskDao taskDao, TaskListDao taskListDao, LabelDao labelDao){
+
+            this.taskDao = taskDao;
+            this.taskListDao = taskListDao;
+            this.labelDao = labelDao;
 
             try {
                 loadTasks();
@@ -116,6 +131,9 @@ public class TaskManager {
             for(Task task:tasks.values()){
                 if(task.getInfo().getTaskList()!=0L) {
                     this.taskLists.get(0L).addTask(task);
+                }
+                if (task.getInfo().getImportant() == 1) {
+                    this.taskLists.get(1L).addTask(task);
                 }
                 this.taskLists.get(task.getInfo().getTaskList()).addTask(task);
                 if(task.getInfo().getLabel()!=-1L){
@@ -183,25 +201,44 @@ public class TaskManager {
 
         public void deleteTaskList(long taskList_id){
 
-            if(taskList_id<USER_TASKLIST_HIGH){
-                UserTaskList taskList=this.taskLists.get(taskList_id);
-                for(Task task:taskList){
-                    deleteTask(task.getInfo().getId());
-                }
-                TaskListInfo listInfo=taskList.getInfo();
-                this.taskListDao.delete(listInfo);
-                this.taskLists.remove(taskList_id);
+            if(taskList_id<USER_TASKLIST_LOW||taskList_id>=LABEL_HIGH){
+                throw new RuntimeException("Get illegal task list id.");//not supposed to get an illegal task list id.
             }
-            else{
-                Label label=this.labels.get(taskList_id);
-                for(Task task:label){
-                    TaskInfo info=task.getInfo();
-                    info.setLabel(-1L);
-                    this.taskDao.update(info);
+            if(taskList_id<USER_TASKLIST_HIGH) {
+                UserTaskList taskList = this.taskLists.get(taskList_id);
+                if (taskList != null) {
+                    Iterator<Task> iterator = taskList.getTasks().iterator();
+                    while (iterator.hasNext()) {
+                        Task task = iterator.next();
+                        iterator.remove();
+                        deleteTask(task.getInfo().getId());
+                    }
+                    TaskListInfo listInfo = taskList.getInfo();
+                    this.taskListDao.delete(listInfo);
+                    this.taskLists.remove(taskList_id);
                 }
-                LabelInfo listInfo=label.getInfo();
-                this.labelDao.delete(listInfo);
-                this.labels.remove(taskList_id);
+                else{
+                    throw new RuntimeException("Deleting a non-exist task list.");
+                }
+            }
+            else {
+                Label label = this.labels.get(taskList_id);
+                if (label != null) {
+                    Iterator<Task> iterator = label.getTasks().iterator();
+                    while (iterator.hasNext()) {
+                        Task task = iterator.next();
+                        TaskInfo info = task.getInfo();
+                        info.setLabel(-1L);
+                        this.taskDao.update(info);
+                        iterator.remove();
+                    }
+                    LabelInfo listInfo = label.getInfo();
+                    this.labelDao.delete(listInfo);
+                    this.labels.remove(taskList_id);
+                }
+                else{
+                    throw new RuntimeException("Deleting a non-exist label.");
+                }
             }
 
         }
@@ -251,7 +288,7 @@ public class TaskManager {
 
         public void deleteTask(long task_id){
             Task task=this.tasks.get(task_id);
-            this.tasks.remove(task);
+            this.tasks.remove(task_id);
 
             UserTaskList taskList=this.taskLists.get(task.getInfo().getTaskList());
             taskList.removeTask(task);
